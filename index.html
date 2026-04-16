@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A.Y Graphics - High Quality Digital Design</title>
+    <style>
+        :root {
+            --bg-color: #0b1426;
+            --text-gold: #d4af37;
+            --text-light: #ffffff;
+            --card-bg: #111e38;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            background-image: radial-gradient(circle at center, #152545 0%, #0b1426 100%);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background-color: rgba(11, 20, 38, 0.9);
+            border-bottom: 1px solid var(--text-gold);
+        }
+
+        .logo {
+            font-family: 'Times New Roman', Times, serif;
+            color: var(--text-gold);
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        nav a:hover { color: var(--text-gold); }
+
+        .join-btn {
+            background-color: var(--text-gold);
+            color: var(--bg-color);
+            padding: 8px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .hero {
+            position: relative;
+            height: 400px;
+            background: url('https://cdn.discordapp.com/attachments/1349006833678815326/1494299203642327051/IMG_6305.png?ex=69e21a14&is=69e0c894&hm=42e2df971f99bd05f9506d83634bc3a980d89cfed1fd427525752ab41c5b4034&') center/cover;
+            display: flex;
+            align-items: center;
+            padding: 0 50px;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to right, var(--bg-color) 10%, transparent 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .product-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            display: flex;
+            padding: 30px;
+            gap: 30px;
+            border: 1px solid #1f3661;
+            margin-bottom: 30px;
+            min-height: 350px;
+        }
+
+        .gallery-preview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 10px;
+            width: 450px;
+            height: 300px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .gallery-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(11, 20, 38, 0.7);
+            color: var(--text-gold);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            opacity: 0;
+            transition: 0.3s;
+            border-radius: 8px;
+        }
+
+        .gallery-preview:hover .gallery-overlay { opacity: 1; }
+
+        .product-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .product-info h3 {
+            font-size: 28px;
+            margin: 0 0 15px 0;
+            color: var(--text-gold);
+        }
+
+        .buy-btn {
+            background-color: var(--text-gold);
+            color: var(--bg-color);
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 25px;
+            transition: transform 0.2s;
+        }
+
+        .buy-btn:hover {
+            background-color: #e6c855;
+            transform: scale(1.05);
+        }
+
+        .bit-logo-button {
+            width: 25px;
+            height: auto;
+            border-radius: 4px;
+        }
+
+        .qr-help-link {
+            font-size: 13px;
+            margin-top: 12px;
+            color: #888;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        /* הגדרות כלליות למודאל */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.95);
+            overflow-y: auto;
+        }
+
+        /* עיצוב המודאל של ה-QR - גדול וללא עיוות */
+        .modal-content-qr {
+            background-color: var(--card-bg);
+            margin: 2% auto; /* רווח קטן מהלמעלה כדי שיהיה מקום */
+            padding: 40px;
+            border: 2px solid var(--text-gold);
+            width: 90%;
+            max-width: 500px; /* רווח מקסימלי נוח לעין */
+            text-align: center;
+            border-radius: 25px;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0,0,0,0.7);
+        }
+
+        .qr-image-style {
+            width: 100%; /* תופס את רוחב הקונטיינר */
+            max-width: 400px;
+            height: auto; /* מאפשר גובה אוטומטי למניעת עיוות */
+            aspect-ratio: 1 / 1; /* שומר על ריבוע מושלם */
+            object-fit: contain; /* מבטיח שכל התמונה תיכנס בלי להיחתך */
+            margin: 25px 0;
+            border-radius: 15px;
+            border: 10px solid white; /* רקע לבן עוזר לסריקה */
+        }
+
+        .close {
+            color: var(--text-gold);
+            position: absolute;
+            top: 20px; right: 30px;
+            font-size: 40px;
+            cursor: pointer;
+            z-index: 101;
+        }
+
+        .modal-content {
+            margin: 50px auto;
+            width: 90%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid var(--text-gold);
+        }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; padding: 15px 20px; }
+            .hero { height: 200px; }
+            .product-card { flex-direction: column; }
+            .gallery-preview { width: 100%; }
+            .qr-help-link { display: none; }
+            .modal-content-qr { width: 85%; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">A.Y GRAPHICS</div>
+        <nav>
+            <a href="https://discord.gg/2CTA4KjypE" target="_blank">Discord</a>
+            <a href="https://www.bitpay.co.il/app/me/29764B63-8891-125F-55B8-18D92793D21F5368" class="join-btn">הצטרף עכשיו</a>
+        </nav>
+    </header>
+
+    <div class="hero"></div>
+
+    <div class="container">
+        <h2 style="font-size: 32px; margin-bottom: 30px; text-align: center;">מוצרים נבחרים</h2>
+
+        <div class="product-card">
+            <div class="gallery-preview" onclick="openModal()">
+                <img src="https://cdn.discordapp.com/attachments/1486828018939727993/1490142458409914398/11.jpg?ex=69e2240f&is=69e0d28f&hm=9952d17587715affebff206330ef871455f684273a6b8da5190cea8c1cf3a821&">
+                <img src="https://cdn.discordapp.com/attachments/1486828018939727993/1490366083297968282/FiveM_b3323_GTAProcess_2026-03-26_21-27-20_174.jpg?ex=69e1a2d3&is=69e05153&hm=6138db4a43d1b5b962109f486995d8482ef96e525151f3a21da9eaf6e7f364c6&">
+                <img src="https://cdn.discordapp.com/attachments/1486828018939727993/1490142457973968916/image15.png?ex=69e2240f&is=69e0d28f&hm=e35440b7d59f818d0fa62ed7b8b276e3ee3fdaf985713a88c59ecf531d8b6e06&">
+                <img src="https://cdn.discordapp.com/attachments/1486828018939727993/1490142461203579072/image6.png?ex=69e22410&is=69e0d290&hm=087d882752073c61da81839a155b3dae4c16cfc593236bd8178b6eecab2d0739&">
+                <div class="gallery-overlay">+ צפה בכל העבודות</div>
+            </div>
+
+            <div class="product-info">
+                <h3>A.Y Graphics Ultimate Pack</h3>
+                <p>החבילה המקצועית ביותר לעיצובי FiveM.</p>
+                
+                <a href="https://www.bitpay.co.il/app/me/29764B63-8891-125F-55B8-18D92793D21F5368" class="buy-btn">
+                    <img src="https://cdn.discordapp.com/attachments/1349006833678815326/1494318647773233283/7c97d239c7cf599d.png?ex=69e22c30&is=69e0dab0&hm=a00382f76b1b7c44e6322513e5db207f24ff2ac51b8ac36453d7e7af5fdb564a&" class="bit-logo-button">
+                    קנה עכשיו ב-80 ₪ בביט
+                </a>
+                <span class="qr-help-link" onclick="openQR()">גולש מהמחשב? לחץ כאן לסריקת תשלום</span>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p class="footer-text">&copy; 2026 <span>A.Y Graphics</span> | כל הזכויות שמורות.</p>
+    </footer>
+
+    <div id="galleryModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div class="modal-content" id="modalImages"></div>
+    </div>
+
+    <div id="qrModal" class="modal">
+        <div class="modal-content-qr">
+            <span class="close" onclick="closeQR()">&times;</span>
+            <h2 style="color:var(--text-gold); margin: 0;">סריקה לתשלום ב-Bit</h2>
+            <p style="margin-bottom: 5px;">פתחו את המצלמה וסרקו את הקוד:</p>
+            
+            <img src="https://cdn.discordapp.com/attachments/1349006833678815326/1494320845861031946/image0.jpg?ex=69e22e3c&is=69e0dcbc&hm=af67aa7e02bc89d465ae874b91df548771e1bd42811743f4854ee61b2dadfad4&" class="qr-image-style">
+            
+            <p style="font-size: 14px; color: #888;">התשלום יועבר לחשבון של <strong>אביאל</strong></p>
+        </div>
+    </div>
+
+    <script>
+        const myImages = [
+            "https://cdn.discordapp.com/attachments/1486828018939727993/1490142461899706509/image7.png?ex=69e22410&is=69e0d290&hm=a7908f0300f93ac13195d1faa4a5f5d85d83d44520ac4579fb31cf03104af6af&",
+            "https://cdn.discordapp.com/attachments/1486828018939727993/1490142435261808670/10.jpg?ex=69e2240a&is=69e0d28a&hm=9d3c0f48812e518ad2dba5ac9dfedc5e5906cc7138356e1d599e490bef049cb1&",
+            "https://cdn.discordapp.com/attachments/1486828018939727993/1490142434896908288/9.jpg?ex=69e22409&is=69e0d289&hm=48ffb385a3e52adc0f8e1c225232c3f666d7ed31387261c21e7bd154b7fef14d&",
+            "https://cdn.discordapp.com/attachments/1486828018939727993/1490142431989993502/3.png?ex=69e22409&is=69e0d289&hm=bdf24e351fbff7b07ab9ae59b4a09098b6753e189ca279e4e9df03ab9f90329c&",
+            "https://cdn.discordapp.com/attachments/1486828018939727993/1490142435676786801/1.png?ex=69e2240a&is=69e0d28a&hm=2233156a5a7b30567a9a0cd1ce8113a586d840ae297cfa90a619112bea9daa5b&",
+            "https://cdn.discordapp.com/attachments/1486828018939727993/1490142462554144818/image14.png?ex=69e22410&is=69e0d290&hm=02928aed3d8d6c9f373b2a7f7ab9c5d3a88c42f17464a7ec4bbe599130043cf4&",
+            "https://cdn.discordapp.com/attachments/1486828018939727993/1490142436331360346/2.png?ex=69e2240a&is=69e0d28a&hm=b160d59fe561c4bc4dc752b459779b38dc9306b2eb1d2fcc53f74a5835966742&"
+        ];
+
+        function openModal() {
+            const modal = document.getElementById('galleryModal');
+            const modalContent = document.getElementById('modalImages');
+            modalContent.innerHTML = ''; 
+            myImages.forEach(url => {
+                let img = document.createElement('img');
+                img.src = url;
+                modalContent.appendChild(img);
+            });
+            modal.style.display = 'block';
+        }
+
+        function closeModal() { document.getElementById('galleryModal').style.display = 'none'; }
+        function openQR() { document.getElementById('qrModal').style.display = 'block'; }
+        function closeQR() { document.getElementById('qrModal').style.display = 'none'; }
+
+        window.onclick = function(event) {
+            let gModal = document.getElementById('galleryModal');
+            let qModal = document.getElementById('qrModal');
+            if (event.target == gModal) { gModal.style.display = "none"; }
+            if (event.target == qModal) { qModal.style.display = "none"; }
+        }
+    </script>
+</body>
+</html>
