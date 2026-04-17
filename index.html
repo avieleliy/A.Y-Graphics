@@ -5,12 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A.Y Graphics - High Quality Digital Design</title>
     
-    <meta property="og:title" content="A.Y Graphics - Ultimate Design Pack">
-    <meta property="og:description" content="החבילה המקצועית ביותר לעיצובי FiveM וגיימינג.">
-    <meta property="og:image" content="https://i.ibb.co/pBnRNM8Q/image-2026-04-17-152805728.png">
-    <meta name="theme-color" content="#d4af37">
-    <meta name="twitter:card" content="summary_large_image">
-
     <style>
         :root {
             --bg-color: #0b1426;
@@ -18,6 +12,9 @@
             --text-light: #ffffff;
             --card-bg: #111e38;
             --border-color: #1f3661;
+            --error-red: #ff4d4d;
+            --success-green: #4CAF50;
+            --accent-glow: rgba(212, 175, 55, 0.2);
         }
 
         body {
@@ -27,348 +24,323 @@
             color: var(--text-light);
             background-image: radial-gradient(circle at center, #152545 0%, #0b1426 100%);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
+        /* סרגל עליון */
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 40px;
-            background-color: rgba(11, 20, 38, 0.9);
-            border-bottom: 1px solid var(--text-gold);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 40px; background-color: rgba(11, 20, 38, 0.95);
+            border-bottom: 1px solid var(--text-gold); position: sticky; top: 0; z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
-        .logo {
-            font-family: 'Times New Roman', Times, serif;
-            color: var(--text-gold);
-            font-size: 24px;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
+        .logo { font-family: 'Times New Roman', serif; color: var(--text-gold); font-size: 28px; font-weight: bold; letter-spacing: 3px; cursor: pointer; text-shadow: 0 0 10px var(--accent-glow); }
 
-        nav a {
-            color: var(--text-light);
-            text-decoration: none;
-            margin: 0 15px;
-            font-size: 14px;
-            transition: 0.3s;
-        }
-
+        nav { display: flex; align-items: center; gap: 25px; }
+        nav a { color: white; text-decoration: none; font-size: 15px; transition: 0.3s; font-weight: 500; }
         nav a:hover { color: var(--text-gold); }
 
-        .join-btn {
-            background-color: var(--text-gold);
-            color: var(--bg-color);
-            padding: 8px 20px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-weight: bold;
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+
+        /* כפתורים */
+        .buy-btn, .join-btn, .submit-btn, .pc-btn, .back-btn {
+            padding: 14px 28px; border-radius: 10px; text-decoration: none;
+            font-weight: bold; display: inline-flex; align-items: center; gap: 12px;
+            cursor: pointer; border: none; transition: 0.3s;
+            justify-content: center; width: 100%; box-sizing: border-box; font-size: 16px;
         }
 
-        .hero {
-            position: relative;
-            height: 400px;
-            background: url(https://i.ibb.co/pBnRNM8Q/image-2026-04-17-152805728.png) center/cover;
-            display: flex;
-            align-items: center;
-            padding: 0 50px;
+        .buy-btn, .submit-btn, .join-btn { background: linear-gradient(135deg, #d4af37, #b8952e); color: #000; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
+        .buy-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5); }
+        
+        .pc-btn, .back-btn { background-color: transparent; color: var(--text-gold); border: 1px solid var(--text-gold); margin-top: 15px; }
+        .pc-btn:hover, .back-btn:hover { background: rgba(212, 175, 55, 0.1); }
+
+        /* מסך טעינה */
+        #loading-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(11, 20, 38, 0.98);
+            z-index: 3000; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .loader { border: 6px solid #1f3661; border-top: 6px solid var(--text-gold); border-radius: 50%; width: 70px; height: 70px; animation: spin 1s linear infinite; }
+        .checkmark { display: none; color: var(--success-green); font-size: 90px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* דף הבית - כרטיס מוצר מוגדל */
+        .hero { height: 450px; background: url('https://i.ibb.co/pBnRNM8Q/image-2026-04-17-152805728.png') center/cover; position: relative; margin-bottom: -50px; border-bottom: 2px solid var(--text-gold); }
+        .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, var(--bg-color), transparent); }
+
+        .product-card { 
+            background-color: var(--card-bg); border-radius: 20px; display: flex; padding: 40px; gap: 40px; 
+            border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative; z-index: 2; margin-top: 20px;
         }
 
-        .hero::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(to right, var(--bg-color) 10%, transparent 100%);
-        }
+        .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 550px; }
+        .gallery-grid img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; transition: 0.3s; cursor: pointer; border: 1px solid transparent; }
+        .gallery-grid img:hover { border-color: var(--text-gold); transform: scale(1.05); }
 
-        .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
+        .product-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .product-info h3 { font-size: 32px; color: var(--text-gold); margin-top: 0; }
+        .product-info p { font-size: 18px; color: #ccc; }
 
-        .product-card {
-            background-color: var(--card-bg);
-            border-radius: 15px;
-            display: flex;
-            padding: 30px;
-            gap: 30px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 50px;
-            min-height: 350px;
-        }
+        /* תקנון */
+        .tos-section { margin-top: 60px; background: rgba(17, 30, 56, 0.5); padding: 40px; border-radius: 20px; border: 1px solid var(--border-color); }
+        .tos-section h2 { color: var(--text-gold); text-align: center; margin-bottom: 30px; }
+        .tos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .tos-item h4 { color: var(--text-gold); margin-bottom: 10px; font-size: 18px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
+        .tos-item p { font-size: 14px; color: #bbb; }
 
-        .gallery-preview {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-            gap: 10px;
-            width: 450px;
-            height: 300px;
-            cursor: pointer;
-            position: relative;
-        }
+        /* דף טופס */
+        .order-page { display: none; max-width: 650px; margin: 50px auto; background: var(--card-bg); padding: 50px; border-radius: 25px; border: 1px solid var(--text-gold); box-shadow: 0 0 40px rgba(0,0,0,0.6); }
+        .form-group { margin-bottom: 22px; }
+        .form-group label { display: block; color: var(--text-gold); margin-bottom: 8px; font-weight: bold; }
+        .form-group input, .form-group select { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid var(--border-color); background: #0b1426; color: white; outline: none; transition: 0.3s; }
+        .form-group input:focus { border-color: var(--text-gold); box-shadow: 0 0 10px var(--accent-glow); }
+        
+        .warning-box { background: rgba(255, 77, 77, 0.1); border: 1px solid var(--error-red); color: var(--error-red); padding: 15px; border-radius: 10px; display: none; margin-bottom: 20px; text-align: center; font-weight: bold; }
 
-        .gallery-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 8px;
-        }
+        /* פוטר */
+        footer { text-align: center; padding: 40px; color: #666; font-size: 14px; border-top: 1px solid var(--border-color); margin-top: 60px; }
 
-        .gallery-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(11, 20, 38, 0.7);
-            color: var(--text-gold);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 22px;
-            font-weight: bold;
-            opacity: 0;
-            transition: 0.3s;
-            border-radius: 8px;
-        }
+        /* מודלים */
+        .modal { display: none; position: fixed; z-index: 2000; inset: 0; background: rgba(0,0,0,0.95); overflow-y: auto; padding: 40px; }
+        .modal-content-qr { background: var(--card-bg); margin: 5% auto; padding: 40px; border: 2px solid var(--text-gold); max-width: 400px; text-align: center; border-radius: 25px; position: relative; color: white; }
+        .qr-image-style { width: 100%; max-width: 250px; border: 10px solid white; border-radius: 15px; margin: 20px 0; }
+        .close { color: var(--text-gold); position: absolute; top: 20px; right: 30px; font-size: 50px; cursor: pointer; transition: 0.3s; }
+        .close:hover { color: white; }
 
-        .gallery-preview:hover .gallery-overlay { opacity: 1; }
-
-        .product-info {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-        }
-
-        .product-info h3 {
-            font-size: 28px;
-            margin: 0 0 15px 0;
-            color: var(--text-gold);
-        }
-
-        .buy-btn {
-            background-color: var(--text-gold);
-            color: var(--bg-color);
-            padding: 12px 25px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 25px;
-            transition: 0.2s;
-        }
-
-        .buy-btn:hover { background-color: #e6c855; transform: scale(1.05); }
-
-        .bit-icon {
-            width: 28px;
-            height: auto;
-            border-radius: 4px;
-            vertical-align: middle;
-        }
-
-        .tos-section {
-            background-color: rgba(17, 30, 56, 0.5);
-            border: 1px solid var(--border-color);
-            border-radius: 15px;
-            padding: 40px;
-            margin-top: 60px;
-        }
-
-        .tos-section h2 {
-            color: var(--text-gold);
-            border-bottom: 2px solid var(--text-gold);
-            display: inline-block;
-            padding-bottom: 10px;
-            margin-bottom: 25px;
-        }
-
-        .tos-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-        }
-
-        .tos-item h4 {
-            color: var(--text-gold);
-            margin-bottom: 10px;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .tos-item p {
-            font-size: 14px;
-            color: #ccc;
-            margin: 5px 0;
-        }
-
-        footer {
-            text-align: center;
-            padding: 40px;
-            border-top: 1px solid var(--border-color);
-            margin-top: 50px;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.95);
-        }
-
-        .modal-content-qr {
-            background-color: var(--card-bg);
-            margin: 5% auto;
-            padding: 40px;
-            border: 2px solid var(--text-gold);
-            width: 90%;
-            max-width: 450px;
-            text-align: center;
-            border-radius: 25px;
-            position: relative;
-        }
-
-        .qr-image-style {
-            width: 100%;
-            max-width: 300px;
-            border: 10px solid white;
-            border-radius: 15px;
-            margin: 20px 0;
-        }
-
-        .close {
-            color: var(--text-gold);
-            position: absolute;
-            top: 20px; right: 30px;
-            font-size: 40px;
-            cursor: pointer;
-        }
-
-        @media (max-width: 768px) {
-            .product-card { flex-direction: column; }
-            .gallery-preview { width: 100%; height: 200px; }
-            .tos-grid { grid-template-columns: 1fr; }
-            header { flex-direction: column; gap: 15px; }
-        }
+        .bit-icon { width: 24px; vertical-align: middle; }
+        @media (max-width: 1000px) { .product-card { flex-direction: column; } .gallery-grid { width: 100%; } .tos-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
+    <div id="loading-overlay">
+        <div id="spinner" class="loader"></div>
+        <div id="success-v" class="checkmark">✔</div>
+        <h2 id="loading-text" style="color: var(--text-gold); margin-top: 20px;">המערכת שולחת את הפרטים...</h2>
+    </div>
+
     <header>
-        <div class="logo">A.Y GRAPHICS</div>
+        <div class="logo" onclick="showPage('home')">A.Y GRAPHICS</div>
         <nav>
-            <a href="https://discord.gg/2CTA4KjypE" target="_blank">Discord</a>
-            <a href="https://www.bitpay.co.il/app/me/29764B63-8891-125F-55B8-18D92793D21F5368" class="join-btn">הצטרף עכשיו</a>
+            <a href="https://discord.gg/2CTA4KjypE" target="_blank">Discord Support</a>
+            <a href="javascript:void(0)" onclick="showPage('order')" class="join-btn" style="width: auto;">הצטרף עכשיו</a>
         </nav>
     </header>
 
-    <div class="hero"></div>
-
-    <div class="container">
-        <h2 style="font-size: 32px; margin-bottom: 30px; text-align: center;">מוצרים נבחרים</h2>
-
-        <div class="product-card">
-            <div class="gallery-preview" onclick="openModal()">
-                <img src="https://i.ibb.co/pBnRNM8Q/image-2026-04-17-152805728.png">
-                <img src="https://i.ibb.co/277357z0/image-2026-04-17-152723067.png">
-                <img src="https://i.ibb.co/JRZbS9Bj/image-2026-04-17-155817461.png">
-                <img src="https://i.ibb.co/m5JjwGsW/image-2026-04-17-155919191.png">
-                <div class="gallery-overlay">+ צפה בכל העבודות</div>
-            </div>
-
-            <div class="product-info">
-                <h3>A.Y Graphics Ultimate Pack</h3>
-                <p>החבילה המקצועית ביותר לעיצובי FiveM. איכות ללא פשרות לשרת שלך.</p>
-                
-                <a href="https://www.bitpay.co.il/app/me/29764B63-8891-125F-55B8-18D92793D21F5368" class="buy-btn">
-                    <img src="https://i.ibb.co/LzVBssw6/image-2026-04-17-160726548.png" alt="Bit Icon" class="bit-icon">
-                    קנה עכשיו ב-80 ₪ בביט
-                </a>
-                <span style="font-size: 13px; margin-top: 12px; color: #888; cursor: pointer; text-decoration: underline;" onclick="openQR()">גולש מהמחשב? לחץ כאן לסריקת תשלום</span>
-            </div>
-        </div>
-
-        <div class="tos-section">
-            <h2>תקנון - A.Y Graphics</h2>
-            <div class="tos-grid">
-                <div class="tos-item">
-                    <h4>💳 מדיניות רכישות והחזרים</h4>
-                    <p><strong>אין החזר כספי:</strong> מרגע קבלת המוצר הדיגיטלי, לא יינתן החזר כספי.</p>
-                    <p><strong>תקינות המוצר:</strong> במקרה של תקלה, יש לפתוח Ticket בדיסקורד.</p>
+    <main id="home-page">
+        <div class="hero"></div>
+        <div class="container">
+            <div class="product-card">
+                <div class="gallery-grid" id="mainGallery">
+                    <img src="https://i.ibb.co/pBnRNM8Q/image-2026-04-17-152805728.png%22%3E" onclick="openGallery()">
+                    <img src="https://i.ibb.co/277357z0/image-2026-04-17-152723067.png%22%3E" onclick="openGallery()">
+                    <img src="https://i.ibb.co/JRZbS9Bj/image-2026-04-17-155817461.png%22%3E" onclick="openGallery()">
+                    <img src="https://i.ibb.co/m5JjwGsW/image-2026-04-17-155919191.png%22%3E" onclick="openGallery()">
+                    <img src="https://i.ibb.co/zH8MfJyP/image14.png" onclick="openGallery()">
+                    <img src="https://i.ibb.co/dsSM6SsC/image6.png" onclick="openGallery()">
                 </div>
-                <div class="tos-item">
-                    <h4>🔒 זכויות יוצרים ואיסור הדלפות</h4>
-                    <p><strong>איסור הדלפות:</strong> חל איסור מוחלט להפיץ או למכור מחדש את הקבצים.</p>
-                    <p><strong>ענישה:</strong> משתמש שייתפס מדליף יורחק לצמיתות (Ban).</p>
+                <div class="product-info">
+                    <h3>A.Y Graphics Ultimate Pack</h3>
+                    <p>החבילה המקצועית והמקיפה ביותר לעיצובי FiveM בישראל. כולל טקסטורות 4K, תאורה ריאליסטית וממשק משתמש ייחודי.</p>
+                    <div style="margin-top: 20px;">
+                        <button onclick="showPage('order')" class="buy-btn" style="width: auto;">
+                            <img src="https://i.ibb.co/LzVBssw6/image-2026-04-17-160726548.png" class="bit-icon">
+                            קנה עכשיו ב-80 ₪ בביט
+                        </button>
+                    </div>
                 </div>
             </div>
+
+            <div class="tos-section">
+                <h2>תקנון - A.Y Graphics</h2>
+                <div class="tos-grid">
+                    <div class="tos-item">
+                        <h4>💳 מדיניות רכישות והחזרים</h4>
+                        <p><strong>אין החזר כספי:</strong> מרגע קבלת המוצר הדיגיטלי, לא יינתן החזר כספי עקב אופי המוצר.</p>
+                        <p><strong>תקינות המוצר:</strong> במקרה של תקלה טכנית במוצר, יש לפתוח Ticket בדיסקורד הרשמי לקבלת תמיכה.</p>
+                    </div>
+                    <div class="tos-item">
+                        <h4>🔒 זכויות יוצרים ואיסור הדלפות</h4>
+                        <p><strong>איסור הדלפות:</strong> חל איסור מוחלט להפיץ, להעביר או למכור מחדש את הקבצים לצד ג'.</p>
+                        <p><strong>ענישה:</strong> משתמש שייתפס מדליף או מפר זכויות יוצרים יורחק לצמיתות (Ban) מכל שירותי המותג.</p>
+                    </div>
+                </div>
+            </div>
         </div>
+    </main>
+
+    <div id="order-page" class="order-page">
+        <h2 style="color: var(--text-gold); text-align: center; margin-bottom: 30px;">השלמת הזמנה</h2>
+        
+        <div id="specWarning" class="warning-box">⚠️ המפרט שלך חלש מדי להרצת העיצובים בצורה אופטימלית.</div>
+
+        <form id="purchaseForm">
+            <div class="form-group"><label>שם מלא</label><input type="text" id="userName" placeholder="ישראל ישראלי" required></div>
+            <div class="form-group"><label>מספר טלפון</label><input type="tel" id="userPhone" placeholder="050-0000000" required></div>
+            <div class="form-group"><label>Discord ID</label><input type="text" id="userDiscord" placeholder="Username#0000" required></div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label>כרטיס מסך</label>
+                    <select id="gpu" onchange="checkSpecs()">
+                        <option value="low">RTX 2060 ומטה / GTX</option>
+                        <option value="ok" selected>RTX 3060 / RX 6600</option>
+                        <option value="high">RTX 4070 ומעלה</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>מעבד</label>
+                    <select id="cpu" onchange="checkSpecs()">
+                        <option value="low">i3 / Ryzen 3 ומטה</option>
+                        <option value="ok" selected>i5 / Ryzen 5</option>
+                        <option value="high">i7 / Ryzen 7 ומעלה</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>זיכרון RAM</label>
+                <select id="ram" onchange="checkSpecs()">
+                    <option value="low">8GB ומטה</option>
+                    <option value="ok" selected>16GB</option>
+                    <option value="high">32GB ומעלה</option>
+                </select>
+            </div>
+
+            <button type="button" onclick="startLoading('direct')" class="submit-btn">
+                <img src="https://i.ibb.co/LzVBssw6/image-2026-04-17-160726548.png" class="bit-icon">
+                שלח פרטים והמשך לתשלום בביט
+            </button>
+            
+            <button type="button" onclick="startLoading('qr')" class="pc-btn">גולש מהמחשב? לחץ כאן לסריקה</button>
+            
+            <button type="button" onclick="showPage('home')" class="back-btn">חזרה לדף הבית</button>
+        </form>
     </div>
 
     <footer>
-        <p>&copy; 2026 <span>A.Y Graphics</span> | כל הזכויות שמורות.</p>
+        <p>© 2026 A.Y Graphics. כל הזכויות שמורות לאביאל. חל איסור העתקה או הפצה של תוכן האתר.</p>
     </footer>
 
     <div id="galleryModal" class="modal">
         <span class="close" onclick="closeModal()">&times;</span>
-        <div style="margin: 50px auto; width: 90%; max-width: 1200px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px;" id="modalImages"></div>
+        <div id="modalImages" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto;"></div>
     </div>
 
     <div id="qrModal" class="modal">
         <div class="modal-content-qr">
             <span class="close" onclick="closeQR()">&times;</span>
-            <h2 style="color:var(--text-gold); margin: 0;">סריקה לתשלום ב-Bit</h2>
-            <p>סרקו את הקוד באפליקציית ביט:</p>
+            <h2 style="color:var(--text-gold);">סריקה לתשלום</h2>
             <img src="https://i.ibb.co/Vpc5BxCD/image-2026-04-17-161133480.png" class="qr-image-style">
-            <p style="font-size: 14px; color: #888;">התשלום יועבר לחשבון של <strong>אביאל</strong></p>
+            <p>שלם 80 ₪ והקבצים ישלחו אליך</p>
         </div>
     </div>
 
     <script>
-        // 7 תמונות הגלריה המעודכנות
-        const myImages = [
-            "https://i.ibb.co/0jb2xJy2/2.png",
-            "https://i.ibb.co/gZtvZ54H/3.png",
-            "https://i.ibb.co/k60WSDV1/4.png",
-            "https://i.ibb.co/21b6zknR/7.png",
-            "https://i.ibb.co/zH8MfJyP/image14.png",
-            "https://i.ibb.co/dsSM6SsC/image6.png",
-            "https://i.ibb.co/xKhVwvm5/10.jpg"
-        ];
+        const bitLink = "https://www.bitpay.co.il/app/me/29764B63-8891-125F-55B8-18D92793D21F5368";
+        const webhookURL = "https://discord.com/api/webhooks/1494698575559659551/R8idMo1kHL-ewdMdiosYGVPSfg87Eq54qlNqQ0_Hrfn10lngBF3MRCCRcoaGr9dWz30_"; 
 
-        function openModal() {
-            const modal = document.getElementById('galleryModal');
-            const modalContent = document.getElementById('modalImages');
-            modalContent.innerHTML = ''; 
-            myImages.forEach(url => {
-                let img = document.createElement('img');
-                img.src = url;
-                img.style.width = "100%";
-                img.style.borderRadius = "10px";
-                img.style.border = "2px solid var(--text-gold)";
-                modalContent.appendChild(img);
-            });
-            modal.style.display = 'block';
+        function showPage(page) {
+            document.getElementById('home-page').style.display = page === 'home' ? 'block' : 'none';
+            document.getElementById('order-page').style.display = page === 'order' ? 'block' : 'none';
+            window.scrollTo(0,0);
         }
 
-        function closeModal() { document.getElementById('galleryModal').style.display = 'none'; }
-        function openQR() { document.getElementById('qrModal').style.display = 'block'; }
-        function closeQR() { document.getElementById('qrModal').style.display = 'none'; }
-
-        window.onclick = function(event) {
-            if (event.target.className === 'modal') {
-                event.target.style.display = "none";
+        function checkSpecs() {
+            const gpu = document.getElementById('gpu').value;
+            const cpu = document.getElementById('cpu').value;
+            const ram = document.getElementById('ram').value;
+            const warning = document.getElementById('specWarning');
+            
+            if(gpu === 'low' || cpu === 'low' || ram === 'low') {
+                warning.style.display = 'block';
+            } else {
+                warning.style.display = 'none';
             }
         }
+
+        async function startLoading(type) {
+            if(!document.getElementById('userName').value || !document.getElementById('userPhone').value) {
+                alert("אנא מלא את כל השדות כדי שנחזור אליך"); return;
+            }
+
+            const overlay = document.getElementById('loading-overlay');
+            overlay.style.display = 'flex';
+
+            sendToDiscord();
+
+            setTimeout(() => {
+                document.getElementById('spinner').style.display = 'none';
+                document.getElementById('success-v').style.display = 'block';
+                document.getElementById('loading-text').innerText = "הפרטים נשמרו במערכת!";
+                document.getElementById('loading-text').style.color = "#4CAF50";
+
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    if (type === 'direct') {
+                        window.location.href = bitLink;
+                    } else {
+                        document.getElementById('qrModal').style.display = 'block';
+                    }
+                    resetLoading();
+                }, 1500);
+            }, 5000);
+        }
+
+        function resetLoading() {
+            document.getElementById('spinner').style.display = 'block';
+            document.getElementById('success-v').style.display = 'none';
+            document.getElementById('loading-text').innerText = "המערכת שולחת את הפרטים...";
+            document.getElementById('loading-text').style.color = "#d4af37";
+        }
+
+        async function sendToDiscord() {
+            const message = {
+                embeds: [{
+                    title: "🔔 הזמנה חדשה - A.Y Graphics",
+                    color: 13938487,
+                    fields: [
+                        { name: "👤 שם", value: document.getElementById('userName').value, inline: true },
+                        { name: "📞 טלפון", value: document.getElementById('userPhone').value, inline: true },
+                        { name: "🎮 דיסקורד", value: document.getElementById('userDiscord').value },
+                        { name: "🖥️ כרטיס מסך", value: document.getElementById('gpu').options[document.getElementById('gpu').selectedIndex].text },
+                        { name: "⚙️ מעבד", value: document.getElementById('cpu').options[document.getElementById('cpu').selectedIndex].text },
+                        { name: "💾 RAM", value: document.getElementById('ram').options[document.getElementById('ram').selectedIndex].text }
+                    ],
+                    footer: { text: "נשלח מהאתר הרשמי" },
+                    timestamp: new Date()
+                }]
+            };
+            try { await fetch(webhookURL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(message) }); } catch(e){}
+        }
+
+        function openGallery() {
+            const imgs = [
+                "https://i.ibb.co/0jb2xJy2/2.png", "https://i.ibb.co/gZtvZ54H/3.png", 
+                "https://i.ibb.co/k60WSDV1/4.png", "https://i.ibb.co/21b6zknR/7.png", 
+                "https://i.ibb.co/zH8MfJyP/image14.png", "https://i.ibb.co/dsSM6SsC/image6.png",
+                "https://i.ibb.co/xKhVwvm5/10.jpg"
+            ];
+            const container = document.getElementById('modalImages');
+            container.innerHTML = '';
+            imgs.forEach(src => {
+                const img = document.createElement('img');
+                img.src = src; img.style.width = '100%'; img.style.borderRadius = '15px';
+                img.style.boxShadow = '0 5px 15px rgba(0,0,0,0.5)';
+                container.appendChild(img);
+            });
+            document.getElementById('galleryModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() { 
+            document.getElementById('galleryModal').style.display = 'none'; 
+            document.body.style.overflow = 'auto';
+        }
+        function closeQR() { document.getElementById('qrModal').style.display = 'none'; }
     </script>
 </body>
 </html>
